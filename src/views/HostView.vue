@@ -65,7 +65,7 @@ const survivalCount = computed(() => {
       <div class="logo-box">
         <h1 class="glitch">{{ state.mode === 'Multiplayer' ? 'MISSION' : state.mode?.toUpperCase() }} INITIALIZED</h1>
         <p class="subtitle" v-if="state.mode === 'Multiplayer'">UPLINK: {{ state.localIp }}:3000</p>
-        <p class="subtitle" v-else-if="state">{{ modes.find(m => m.id === state.mode)?.desc }}</p>
+        <p class="subtitle" v-else-if="state">{{ modes.find(m => m.id === (state?.mode || ''))?.desc }}</p>
       </div>
       
       <div class="actions">

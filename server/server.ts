@@ -180,12 +180,17 @@ io.on('connection', (socket) => {
     if (Date.now() < teamState.lockoutUntil) return;
 
     const normalizedAnswer = answer.toLowerCase().trim();
+    const noSpaceAnswer = normalizedAnswer.replace(/\s+/g, '');
     if (!normalizedAnswer) return;
 
     // Search for any unclaimed puzzle that matches this answer
-    const matchingPuzzle = gameState.puzzles.find(p => 
-      !p.claimedBy && p.solution.toLowerCase().trim() === normalizedAnswer
-    );
+    const matchingPuzzle = gameState.puzzles.find(p => {
+      if (p.claimedBy) return false;
+      const sol = p.solution.toLowerCase().trim();
+      const noSpaceSol = sol.replace(/\s+/g, '');
+      
+      return sol === normalizedAnswer || noSpaceSol === noSpaceAnswer;
+    });
 
     if (matchingPuzzle) {
       matchingPuzzle.claimedBy = team;

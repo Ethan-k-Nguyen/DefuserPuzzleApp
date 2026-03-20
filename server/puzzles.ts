@@ -49,7 +49,7 @@ export function generatePuzzles(deviceSettings: DeviceSettings, count: number = 
     let data: PuzzleData = {};
     let solution: string = "";
 
-    const ALL_COLORS = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Brown", "White"];
+    const ALL_COLORS = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "White"];
 
     switch (type) {
       case 'Who\'s First':
@@ -184,7 +184,7 @@ export function generatePuzzles(deviceSettings: DeviceSettings, count: number = 
         solution = selected.value;
         break;
       case 'Signal Flags':
-        const FLAG_COLORS = ["Red", "Orange", "Yellow", "Blue", "Green", "Purple", "White", "Gray", "Brown"];
+        const FLAG_COLORS = ["Red", "Orange", "Yellow", "Blue", "Green", "Purple", "White"];
         const numFlags = Math.random() > 0.5 ? 3 : 4;
         const selectedFlags = Array.from({ length: numFlags }, () => FLAG_COLORS[Math.floor(Math.random() * FLAG_COLORS.length)]);
         data = { flags: selectedFlags };
@@ -209,14 +209,6 @@ export function generatePuzzles(deviceSettings: DeviceSettings, count: number = 
             if (mode === 'Parallel') flagResults.push("EWE");
             else if (mode === 'S-Video') flagResults.push("YOURE");
             else flagResults.push("HIU");
-          } else if (color === 'Gray') {
-            if (mode === 'Parallel') flagResults.push("W");
-            else if (mode === 'S-Video') flagResults.push("YOR");
-            else flagResults.push("WHO");
-          } else if (color === 'Brown') {
-            if (mode === 'Parallel') flagResults.push("2YOU");
-            else if (mode === 'S-Video') flagResults.push("YOUARE");
-            else flagResults.push("HOO");
           }
         });
 
@@ -326,11 +318,14 @@ export function generatePuzzles(deviceSettings: DeviceSettings, count: number = 
           // 2. Otherwise, if there are two or more words where the Ink Color of one matches the Text of a different word
           let matchCount = 0;
           for (let j = 0; j < 5; j++) {
+            let matchesAnyOther = false;
             for (let k = 0; k < 5; k++) {
               if (j !== k && ink(j) === text(k)) {
-                matchCount++;
+                matchesAnyOther = true;
+                break;
               }
             }
+            if (matchesAnyOther) matchCount++;
           }
 
           if (matchCount >= 2) {
@@ -463,13 +458,11 @@ export function generatePuzzles(deviceSettings: DeviceSettings, count: number = 
           const posA = getPos(a);
           const posB = getPos(b);
 
-          // Top/Bottom matters more than left right
           if (posA.r !== posB.r) {
             return isOdd ? posA.r - posB.r : posB.r - posA.r;
           }
-          // Left/Right
           return hasVowel ? posA.c - posB.c : posB.c - posA.c;
-        }).join(' ');
+        }).join('');
         break;
     }
 
